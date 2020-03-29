@@ -14,4 +14,11 @@ class ClientFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_client, container, false)
     }
+
+    companion object {
+        fun newInstance() = ClientFragment().apply {
+            arguments = Bundle().apply {
+            }
+        }
+    }
 }
