@@ -19,4 +19,12 @@ class AppActivity : AppCompatActivity() {
             commit()
         }
     }
+
+    private fun openHostFragment() {
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fl_container, HostFragment())
+            addToBackStack(null)
+            commit()
+        }
+    }
 }
