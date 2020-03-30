@@ -1,6 +1,8 @@
 package com.kisnem.p2p_sample
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,13 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_app.*
 import kotlinx.android.synthetic.main.fragment_client.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.PrintWriter
+import java.net.Socket
 
 class ClientFragment : Fragment() {
 
@@ -26,6 +34,10 @@ class ClientFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sendRequest()
+
+        button.setOnClickListener {
+            sendMessage(editText_msg.text.toString(), editText_ip.text.toString())
+        }
     }
 
     private fun sendRequest() {
@@ -41,6 +53,44 @@ class ClientFragment : Fragment() {
             Response.ErrorListener { textView1.text = "That didn't work!" })
         queue.add(stringRequest)
     }
+
+    private fun sendMessage(msg: String, hostIp: String) {
+        val handler = Handler();
+        val thread = Thread(Runnable {
+            try {
+                //Replace below IP with the IP of that device in which server socket open.
+                //If you change port then change the port number in the server side code also.
+                val s = Socket(hostIp, 9002);
+
+                val out = s.getOutputStream();
+
+                val output = PrintWriter(out);
+
+                output.println(msg);
+                output.flush();
+                val input = BufferedReader(InputStreamReader(s.getInputStream()));
+                val st = input.readLine();
+
+                handler.post {
+                    run {
+//                        val s = mTextViewReplyFromServer . getText ().toString();
+                        if (st.trim().isNotEmpty())
+                            textView.text = ("\nFrom Server : $st");
+                    }
+                }
+
+                output.close()
+                out.close()
+                s.close()
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+
+        })
+
+        thread.start();
+    }
+
 
     companion object {
         fun newInstance() = ClientFragment().apply {
