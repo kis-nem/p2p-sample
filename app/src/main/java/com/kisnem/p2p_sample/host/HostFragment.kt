@@ -51,6 +51,8 @@ class HostFragment private constructor() : Fragment() {
                 tvStatus.text = answer
                 textRunnable?.let { runnable -> textHandler.postDelayed(runnable, 5000) }
             }
+            textRunnable?.let {  textHandler.post(it)}
+
         }
     }
 
