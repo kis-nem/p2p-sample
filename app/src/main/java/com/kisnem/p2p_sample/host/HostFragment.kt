@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.fragment_host.*
 import java.io.DataInputStream
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class HostFragment private constructor() : Fragment() {
 
@@ -20,11 +22,14 @@ class HostFragment private constructor() : Fragment() {
     private var client: Socket? = null
     private var textRunnable: Runnable? = null
     private val textHandler = Handler(Looper.getMainLooper())
+    private val executor: Executor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        server = ServerSocket(6666).apply {
-            client = accept()
+        executor.execute {
+            server = ServerSocket(6666).apply {
+                client = accept()
+            }
         }
     }
 
@@ -37,13 +42,15 @@ class HostFragment private constructor() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val inn = client?.let { client ->
-            DataInputStream(client.getInputStream())
-        }
-        textRunnable = Runnable {
-            val answer = inn?.readUTF()
-            tvStatus.text = answer
-            textRunnable?.let { runnable -> textHandler.postDelayed(runnable, 5000) }
+        executor.execute {
+            val inn = client?.let { client ->
+                DataInputStream(client.getInputStream())
+            }
+            textRunnable = Runnable {
+                val answer = inn?.readUTF()
+                tvStatus.text = answer
+                textRunnable?.let { runnable -> textHandler.postDelayed(runnable, 5000) }
+            }
         }
     }
 
