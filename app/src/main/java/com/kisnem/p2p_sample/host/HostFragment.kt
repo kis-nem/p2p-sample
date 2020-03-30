@@ -22,7 +22,7 @@ class HostFragment private constructor() : Fragment() {
     private var client: Socket? = null
     private var textRunnable: Runnable? = null
     private val textHandler = Handler(Looper.getMainLooper())
-    private val executor: Executor = Executors.newSingleThreadExecutor()
+    private val executor: Executor = Executors.newFixedThreadPool(2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
