@@ -56,7 +56,7 @@ class ClientFragment : Fragment() {
         val handler = Handler();
         val thread = Thread(Runnable {
             try {
-                val s = Socket(hostIp, 9002);
+                val s = Socket(hostIp, 6666);
                 val out = s.getOutputStream();
                 val output = PrintWriter(out);
                 output.println(msg);
