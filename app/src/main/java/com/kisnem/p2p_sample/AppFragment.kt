@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.kisnem.p2p_sample.host.HostFragment
 import kotlinx.android.synthetic.main.fragment_app.*
 
 class AppFragment : Fragment() {
@@ -39,7 +40,7 @@ class AppFragment : Fragment() {
 
     private fun openHostFragment() {
         requireFragmentManager().beginTransaction().apply {
-            replace(R.id.fl_container, HostFragment())
+            replace(R.id.fl_container, HostFragment.newInstance())
             addToBackStack("host")
             commit()
         }
