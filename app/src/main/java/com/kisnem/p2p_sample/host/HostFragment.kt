@@ -57,7 +57,7 @@ class HostFragment private constructor() : Fragment() {
 
     override fun onDestroyView() {
         server?.close()
-        textHandler.removeCallbacks(textRunnable)
+        textRunnable?.let { textHandler.removeCallbacks(it) }
         super.onDestroyView()
     }
 }
