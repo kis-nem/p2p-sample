@@ -8,22 +8,13 @@ class AppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app)
-
-        openClientFragment()
+        openAppFragment()
     }
 
-    private fun openClientFragment() {
+    private fun openAppFragment() {
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fl_container, ClientFragment.newInstance())
-            addToBackStack(null)
-            commit()
-        }
-    }
-
-    private fun openHostFragment() {
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fl_container, HostFragment())
-            addToBackStack(null)
+            replace(R.id.fl_container, AppFragment.newInstance())
+            addToBackStack("app")
             commit()
         }
     }
